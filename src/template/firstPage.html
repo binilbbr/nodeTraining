@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>First Page</title>
+        <style>
+            th,td {
+                padding: 10px;
+            }
+        </style>
+        <script>
+            //
+
+            //
+            var employeeData;
+            function loopTable(){
+                fetch("http://localhost:3000/v1/employees")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data[0].name); // Prints result from `response.json()`
+                    employeeData = data;
+                    // received = data.length;
+                    createTable();
+                })
+
+            }
+
+            // console.log('employee data: ' + employeeData);
+
+            function check(empID){
+                
+                console.log("Emp ID: " + empID);// to display an employee data
+                var url = "http://localhost:3000/v1/employees/" + empID;
+                console.log("url: " + url);
+                fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(" inside firstpage check fn: " + data); // Prints result from `response.json()`
+                    var employeeTable = "<table style='border:solid;'><tr style='color:red'>"
+                    employeeTable+= "<th style=''> Employee_ID</th> <th>Employee_Name</th> <th>Employee_Department</th></tr>"
+                    employeeTable+= "<tr style='text-align:center;padding:10px;'> <td>" + data.id + "</td> <td>" + data.name + "</td> <td>" + data.department +"</td></tr>"
+                    document.getElementById('demo').innerHTML = employeeTable;
+                })
+
+               
+            }
+
+            var myTable;
+            function createTable(){
+
+                myTable= "<table style=' border: solid;'><tr><th style='width: 100px; color: red;'>Employee_ID</th>";
+                myTable+= "<th style='width: 100px; color: red; text-align: center;'>Employee_Name</th>";
+                myTable+="<th style='width: 100px; color: red; text-align: center;'>Employee_Department</th></tr>";
+
+
+                for (let index = 0; index < employeeData.length; index++) {
+                myTable+="<tr onclick='check("+ employeeData[index].id +")'><td style='width: 100px; text-align: center;'>" + employeeData[index].id + "</td>";
+                myTable+="<td style='width: 100px; text-align: center;'>" + employeeData[index].name + " </td>"; 
+                myTable+="<td style='width: 100px; text-align: center;'>" + employeeData[index].department + "</td></tr>";   
+                
+                }
+
+                myTable+="</table>";
+                document.getElementById('demo').innerHTML = myTable;
+                // $('body').append(myTable);
+            }
+            
+        </script>
+    </head>
+    <body>
+        <h1>Working</h1>
+        <button onclick="loopTable()">Click to view Employee Data</button>
+        <p id="demo"></p>
+    </body>
+</html>
